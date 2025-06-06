@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .sidebar {
+        height: 100vh;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #343a40;
+        color: #fff;
+        padding-top: 20px;
+        transition: 0.3s;
+    }
+    .sidebar a {
+        color: #ddd;
+        padding: 15px;
+        display: block;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .sidebar a:hover {
+        background: #495057;
+    }
+    .sidebar .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding: 15px;
+    }
+    .hide-sidebar {
+        margin-left: 0;
+    }
+    .row {
+        margin-bottom: 15px;
+    }
+    .chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .warning-message {
+        display: flex;
+        align-items: center;
+        background-color: #fff4cc; /* Light yellow background */
+        color: #856404; /* Dark yellow text */
+        border: 1px solid #ffeeba; /* Slightly darker border */
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .warning-icon {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #856404; /* Icon color matching text */
+    }
+    .hidden { display: none; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+    }
+</style>
+<script>
+    function showTable(id) {
+        document.querySelectorAll('.data-table').forEach(table => table.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        }
+</script>
+</head>
+<body>
+<div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&#9776;</span>
+    <a href="{% url 'executive_dashboard' id %}">Executive Dashboard</a>
+</div>
+
+<div id="mainContent" class="main-content"> 
+    <div class="container">
+        <div class="row">
+            {% for apartment_block in apartment_blocks %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">     
+                            <h4>Apartment {{apartment_block.block_id}}</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Number of Stories:<strong>{{apartment_block.number_of_stories}}</strong></p>
+                            <p>Units per Story:<strong>{{apartment_block.units_per_story}}</strong></p>
+                            <a href="{% url 'property_of_apartment_block' apartment_block.block_id id message %}" class="btn btn-primary">View Property Of Block</a><br></br>
+                            <a href="{% url 'property_of_apartment_block' apartment_block.block_id id message %}" class="btn btn-success">View Maintenance Of Block</a><br></br>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+            {% endfor %}
+    </div>
+</div>
+</body>
+</html>
+        

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Maintenance Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+        }
+
+        .form-group .image-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group .image-upload input[type="file"] {
+            border: none;
+            padding: 0;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        .warning-message {
+        display: flex;
+        align-items: center;
+        background-color: #fff4cc; /* Light yellow background */
+        color: #856404; /* Dark yellow text */
+        border: 1px solid #ffeeba; /* Slightly darker border */
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .warning-icon {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #856404; /* Icon color matching text */
+    }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Property Maintenance Form</h2>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'property_maintenance' property_category property.id apartmentblock exec_id %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="apartmentblock">Apartment Block: {{ apartmentblock }}</label>
+            </div>
+        
+            <div class="form-group">
+                <label for="category">Property Category: {{ property_category }}</label>
+            </div>
+        
+            <div class="form-group">
+                <label for="maintenance_date">Maintenance Date</label>
+                <input type="date" id="maintenance_date" name="maintenance_date" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="maintenance_cost">Maintenance Cost</label>
+                <input type="number" id="maintenance_cost" name="maintenance_cost" step="50000" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="property_image">Property Image</label>
+                <input type="file" id="property_image" name="property_image" accept="image/*" placeholder="NOT REQUIRED!">
+            </div>
+
+            <div class="form-group">
+                <label for="unit">Unit:</label>
+                <input type="number" id="unit" name="unit" 
+                       value="{% if property.unit is not None %}{{ property.unit }}{% else %}null{% endif %}" 
+                       readonly>
+            </div>
+            
+            <div class="form-group">
+                <label for="story">Story:</label>
+                <input type="number" id="story" name="story" 
+                       value="{% if property.story is not None %}{{ property.story }}{% else %}null{% endif %}" 
+                       readonly>
+            </div>
+        
+            <div class="form-group">
+                <label for="on_ground_location">On Ground Location</label>
+                <input type="text" id="on_ground_location" name="on_ground_location" placeholder="NOT REQUIRED!">
+            </div>
+        
+            <div class="form-group">
+                <label for="next_maintenance_date">Next Maintenance Date</label>
+                <input type="date" id="next_maintenance_date" name="next_maintenance_date" required placeholder="IS REQUIRED!">
+            </div>
+        
+            {% if msg %}
+            <div class="warning-message">
+                <div><span class="warning-icon">✅</span> {{ msg }}</div>
+            </div>
+            {% endif %}
+            <div>
+                <a href="{% url 'property_of_apartment_block' apartmentblock.block_id exec_id message %}" class="btn btn-primary">Go Back to Property of {{ apartmentblock }}</a>
+            </div>
+
+            <button type="submit">Submit Maintenance Request</button>
+        </form>
+        
+    </div>
+</body>
+</html>

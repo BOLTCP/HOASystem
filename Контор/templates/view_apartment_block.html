@@ -1,0 +1,130 @@
+{% load custom_filters %}
+{% load unit_conversion %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Residents of Block {{ block_id.block_id }}</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+{% block content %}
+<h1>Residents of Block {{ block_id }}</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Story / Unit</th>
+            {% for unit in units_per_story|range_filter %}
+                <th>Unit {{ unit }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for story in number_of_stories|range_filter %}
+        <tr>
+            <td>Story {{ story }}</td>
+            {% for unit in units_per_story|range_filter %}
+                <td>
+                    
+                    {% for resident in residents %}
+                    {% if resident.story == story and resident.unit == unit %}
+                        {% with resident=resident %}
+                            {{ resident.id }} 
+                            {{ resident.story|multiply:100|add:resident.unit }}
+                            {{ resident.name }} <br>
+                            {{ resident.phone_number }} 
+                            <a href="{% url 'edit_resident' block_id resident.id %}">Edit</a>
+                            <a href="{% url 'delete_resident' resident.id block_id %}">Delete</a> 
+                            <a href="{% url 'monthly_usage' resident.id block_id %}">Usage</a>       
+                        {% endwith %}
+                       
+                    {% endif %}
+                    {% endfor %}
+    
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    
+    
+</table>
+
+<a href="#" id="form">Add Resident</a>
+<div id="add-resident-form" style="display: none;">
+    <h2>Add New Resident</h2>
+    <form id="resident-form" method="post" action="{% url 'add_resident' block_id %}">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required><br>
+        <br>
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" name="phone_number" id="phone_number" required><br>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required><br>
+        <br>
+        <label for="story">Story:</label>
+        <input type="number" name="story" id="story" required min="1" max="{{ number_of_stories }}"><br>
+        <br>
+        <label for="unit">Unit:</label>
+        <input type="number" name="unit" id="unit" required min="1" max="{{ units_per_story }}"><br>
+        <br>
+        <button type="submit">Add Resident</button>
+    </form>
+</div>
+<a href="{% url 'dashboard' id %}">Dashbard</a> 
+{% endblock %}
+
+<script>
+    // JavaScript to toggle the display of the add resident form
+    document.getElementById("form").onclick = function(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        var form = document.getElementById("add-resident-form");
+        form.style.display = form.style.display === "none" ? "block" : "none"; // Toggle form visibility
+    };
+
+    // AJAX form submission
+    document.getElementById("resident-form").onsubmit = function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData(this); // Collect form data
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", this.action, true); // Open a POST request to the action URL
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest"); // Set header to indicate AJAX request
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert(response.message); 
+                    location.reload()
+                } else {
+                    // Handle form errors
+                    console.error(response.errors);
+                    alert('There was an error: ' + JSON.stringify(response.errors));
+                }
+            } else {
+                alert('An error occurred while adding the resident.');
+            }
+        };
+
+        xhr.send(formData); // Send form data
+    };
+</script>
+
+</body>
+</html>
+

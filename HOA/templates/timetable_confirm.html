@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Confirm Timetable Creation</title>
+</head>
+<body>
+    <h1>Create Monthly Timetable</h1>
+    <p>Are you sure you want to create this month's timetable for <strong>{{ staff.fname }}</strong>?</p>
+    <p><strong>Month:</strong> {{ month }}/{{ year }}</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="confirm" class="btn btn-success">Yes, Create</button>
+        <a href="{% url 'hoa_staffs' id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</body>
+</html>

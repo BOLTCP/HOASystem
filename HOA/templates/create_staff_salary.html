@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Staff Salary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Make a Budget Request</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="salary_amount">Salary Amount:</label>
+            <input type="number" id="salary_amount" name="salary_amount" placeholder="Enter salary amount" required>
+
+            <label for="month">Payment Date:</label>
+            <input type="datetime-local" id="month" name="month" placeholder="Time of creation" required>
+
+            <label for="paid_on">Paid On:</label>
+            <input type="datetime-local" id="paid_on" name="paid_on" placeholder="Paid on">
+
+            <label for="bank_account">Bank Account:</label>
+            <input type="number" id="bank_account" name="bank_account" placeholder="Bank Account">
+
+            <label for="bank_type">Enter Bank:</label>
+            <select id="bank_type" name="bank_type" aria-placeholder="Enter bank Type">
+                <option value="Khan Bank">Khan Bank</option>
+                <option value="Golomt Bank">Golomt Bank</option>
+                <option value="TDB">TDB</option>
+                <option value="Khas Bank">Khas Bank</option>
+            </select>
+
+            <button type="submit">Add Salary</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{% block content %}
+  <h2>Staff Salary List</h2>
+  <ul>
+    {% for salary in salaries %}
+      <li>{{ salary.staff.lname }} - {{ salary.salary_amount }} ({{ salary.month }})</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

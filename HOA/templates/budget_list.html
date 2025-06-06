@@ -1,0 +1,8 @@
+{% block content %}
+  <h2>Budget List</h2>
+  <ul>
+    {% for budget in budgets %}
+      <li>{{ budget.apartmentblock.block_number }} - {{ budget.total_budget_amount }} ({{ budget.budget_month }})</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,15 @@
+/* Add to your CSS file */
+.grid-container {
+    display: grid;
+    gap: 10px;
+  }
+  .grid-row {
+    display: flex;
+  }
+  .grid-cell {
+    border: 1px solid #ccc;
+    padding: 10px;
+    flex: 1;
+    text-align: center;
+  }
+  

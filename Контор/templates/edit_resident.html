@@ -1,0 +1,29 @@
+{% block content %}
+<h2>Edit Resident for Block {{ block_id }}</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" placeholder="{{resident.name}}" required><br>
+    <br>
+    <label for="phone_number">Phone Number:</label>
+    <input type="text" name="phone_number" id="phone_number" placeholder="{{resident.phone_number}}" required><br>
+    <br>
+    <label for="story">Story:</label>
+    <input type="number" name="story" id="story" placeholder="{{block.story}}" required min="1" max="{{ block.number_of_stories }}"><br>
+    <br>
+    <label for="unit">Unit:</label>
+    <input type="number" name="unit" id="unit" placeholder="{{block.unit}}" required min="1" max="{{ block.units_per_story }}"><br>
+    <br>
+    <button type="submit">Edit Resident</button>
+    
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+<!-- monthly_usage_form.html -->
+<form method="post" action="{% url 'monthly_usage' resident_id block_id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <!-- Optional hidden input for the ID if you need it for logic but don't want to display -->
+    <input type="hidden" name="id" value="{{ resident_id }}" />
+
+    <button type="submit">Submit</button>
+</form>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .sidebar {
+        height: 100vh;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #343a40;
+        color: #fff;
+        padding-top: 20px;
+        transition: 0.3s;
+    }
+    .sidebar a {
+        color: #ddd;
+        padding: 15px;
+        display: block;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .sidebar a:hover {
+        background: #495057;
+    }
+    .sidebar .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding: 15px;
+    }
+    .hide-sidebar {
+        margin-left: 0;
+    }
+    .row {
+        margin-bottom: 15px;
+    }
+    .chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .warning-message {
+        display: flex;
+        align-items: center;
+        background-color: #fff4cc; /* Light yellow background */
+        color: #856404; /* Dark yellow text */
+        border: 1px solid #ffeeba; /* Slightly darker border */
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .warning-icon {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #856404; /* Icon color matching text */
+    }
+    .hidden { display: none; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+    }
+</style>
+<script>
+    function showTable(id) {
+        document.querySelectorAll('.data-table').forEach(table => table.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        }
+</script>
+</style>
+</head>
+<body>
+<div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&#9776;</span>
+    <a href="{% url 'create_budget' id %}">HOA  budget</a>
+    <a href="{% url 'see_budget_request' id %}">See budget Request</a>
+    <a href="{% url 'hoa_staffs' id %}">Staffs</a>
+    <a href="{% url 'see_timetable' id %}">Staff Timetable</a>
+    <a href="{% url 'view_apartments' id %}">Apartments</a>
+    <a href="{% url 'logout_confirmation' id %}">Log Out</a>
+</div>
+
+<div id="mainContent" class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h4>Executive</h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>ID:</strong> {{ executive.id }}</p>
+                        <p><strong>Member Name:</strong> {{ executive.memberName }}</p>
+                        <p><strong>Category:</strong> {{ executive.category }}</p>
+                        <p><strong>Description:</strong> {{ executive.description }}</p>
+                        <p><strong>Since:</strong> {{ executive.since }}</p>
+                    </div>
+                </div>          
+            </div>                                          
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4>Apartments Of HOA</h4>                                          
+                    </div>
+                    <div class="card-body"> 
+                        <p><strong>Number Of Apartment Block/s:</strong> {{ number_of_blocks }}</p>
+                        <p><strong>Number Of Residents:</strong> {{ number_of_residents }}</p>
+                        <p><strong>Capacity For Residency:</strong> {{ capacity_of_all_blocks }}</p>
+                        <p><strong>  </strong>  </p>
+                        <p><strong>  </strong>  </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h4>HOA Reports</h4>                                          
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Structural:</strong> {{ structualelements }}</p>
+                        <p><strong>Utility:</strong> {{ utilitysystems }}</p>
+                        <p><strong>Amenity:</strong> {{ sharedamenities }}</p>
+                        <p><strong>Security:</strong> {{ securities }}</p>
+                        <p><strong>Other:</strong> {{ other }}</p>  
+                    </div>
+                </div>
+            </div>
+
+            {% if messages.message %}
+                <div class="warning-message">
+                    <span class="warning-icon">⚠️</span>
+                    <span>{{ messages.message }} <a href="{% url 'add_staff' id %}">Add Staff</a></span>
+                </div>
+            {% endif %}
+
+        </div>
+        {% block content %}
+        
+    </div>
+</body>
+</html>
+
+{% endblock %}
+</body>
+</html>
+

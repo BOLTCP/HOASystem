@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Usage History for Resident ID: {{ resident_id }}</h2>
+
+        {% if usage_history %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Recorded</th>
+                        <th>Water Usage (m³)</th>
+                        <th>Electricity Usage (kWh)</th>
+                        <th>Monthly Payment</th>
+                        <th>Fees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in usage_history %}
+                        <tr>
+                            <td>{{ record.recorded_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ record.water_usage }}</td>
+                            <td>{{ record.electricity_usage }}</td>
+                            <td>{{ record.monthly_payment }}</td>
+                            <td>{{ record.fees }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No usage history found for this resident.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

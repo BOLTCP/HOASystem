@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    table {
+            border-collapse: collapse;
+            width: 100%;
+    }
+    th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 10px;
+    }
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .sidebar {
+        height: 100vh;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #343a40;
+        color: #fff;
+        padding-top: 20px;
+        transition: 0.3s;
+    }
+    .sidebar a {
+        color: #ddd;
+        padding: 15px;
+        display: block;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .sidebar a:hover {
+        background: #495057;
+    }
+    .sidebar .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding: 15px;
+    }
+    .hide-sidebar {
+        margin-left: 0;
+    }
+    .row {
+        margin-bottom: 15px;
+    }
+    .chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .warning-message {
+        display: flex;
+        align-items: center;
+        background-color: #fff4cc; /* Light yellow background */
+        color: #856404; /* Dark yellow text */
+        border: 1px solid #ffeeba; /* Slightly darker border */
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .warning-icon {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #856404; /* Icon color matching text */
+    }
+</style>
+</style>
+</head>
+<body>
+<div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&#9776;</span>
+    <a href="{% url 'budget_request' id %}">Make a Budget Request</a>
+    <a href="{% url 'staff_dashboard' id %}">Staff Dashbard</a>
+</div>
+{% block content %}
+<div id="mainContent" class="main-content">
+    <div class="container">
+        <div class="row">
+            
+            {% if budget_requests %}
+            {% for budget_request in budget_requests %}
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4>Request Number: budget_request.id</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Name: {{ budget_request.name }}</p>
+                        <p>Staff: {{ budget_request.staff }}</p>
+                        <p>Request Type: {{ budget_request.request_type }}</p>
+                        <p>Request Info: {{ budget_request.request_info  }}</p>
+                        <p>Pretext: {{ budget_request.pretext }}</p>
+                        <p>Comment: {{ budget_request.comment }}</p>
+                        <p>Request Date: {{ budget_request.request_date }}</p>
+                        {% if budget_request.desicion == 'Pending' %}
+                        <p style="color: blue">Desicion : {{ budget_request.desicion }}</p>
+                        {% endif %}
+                        {% if budget_request.desicion == 'Denied' %}
+                        <p style="color: red">Desicion : {{ budget_request.desicion }}</p>
+                        {% endif %}
+                        {% if budget_request.desicion == 'Approved' %}
+                        <p style="color: green">Desicion : {{ budget_request.desicion }}</p>
+                        {% endif %}
+                        <p>Desicion Comment  Date: {{ budget_request.desicion_comment }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}  
+            
+                {% if message %}
+                    <div class="warning-message">
+                        <span class="warning-icon">⚠️</span><span>{{ message }}</span>
+                    </div>
+                {% endif %}
+        </div>
+    </div>
+</div> 
+{% endblock %}
+
+</body>
+</html>
+

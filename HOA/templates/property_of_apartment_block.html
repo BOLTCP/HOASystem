@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .sidebar {
+        height: 100vh;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #343a40;
+        color: #fff;
+        padding-top: 20px;
+        transition: 0.3s;
+    }
+    .sidebar a {
+        color: #ddd;
+        padding: 15px;
+        display: block;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .sidebar a:hover {
+        background: #495057;
+    }
+    .sidebar .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+    }
+    .main-content {
+        margin-left: 250px;
+        padding: 15px;
+    }
+    .hide-sidebar {
+        margin-left: 0;
+    }
+    .row {
+        margin-bottom: 15px;
+    }
+    .chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .warning-message {
+        display: flex;
+        align-items: center;
+        background-color: #fff4cc; /* Light yellow background */
+        color: #856404; /* Dark yellow text */
+        border: 1px solid #ffeeba; /* Slightly darker border */
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .warning-icon {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #856404; /* Icon color matching text */
+    }
+    .hidden { display: none; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+    }
+</style>
+<script>
+    function showTable(id) {
+        document.querySelectorAll('.data-table').forEach(table => table.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        }
+</script>
+<script>
+    function showTableMaint(id) {
+        document.querySelectorAll('.data-table1').forEach(table => table.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        }
+</script>
+</head>
+<body>
+<div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&#9776;</span>
+    <a href="{% url 'view_apartments' exec_id %}">Apartment</a>
+</div>
+
+<div id="mainContent" class="main-content"> 
+    <div class="container">
+        <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">     
+                            <h4>Apartment {{apartment_block.block_id}}</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Number of Stories:<strong>{{apartment_block.number_of_stories}}</strong></p>
+                            <p>Units per Story:<strong>{{apartment_block.units_per_story}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+            <div class="container my-5" style="max-width: 1000px; margin: auto;">
+                <div class="container">
+                    <h2 class="text-center mb-3">Common Property</h2>
+                    
+                        <label for="category-dropdown">Select a Category To View Apartment {{ apartment_block.block_id }} Property:</label>
+                        <select id="category-dropdown" onchange="showTable(this.value)">
+                            <option value="">Select Common Property Type</option>
+                            <option value="table-structuralelements">Structural Elements</option>
+                            <option value="table-utilitysystems">Utility Systems</option>
+                            <option value="table-sharedamenities">Shared Amenities</option>
+                            <option value="table-securities">Securities</option>
+                            <option value="table-other">Other</option>
+                        </select>
+
+                        <!-- Tables -->
+                        <div>
+
+                            <!-- Structural Elements -->
+                            <table id="table-structuralelements" class="data-table hidden">
+                                <thead>
+                                    <tr>
+                                        <th>ID:</th>
+                                        <th>Element Type</th>
+                                        <th>Condition</th>
+                                        <th>Inspection Date</th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Location</th>
+                                        <th>Maintenance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.structuralelements %}
+                                    <tr>    
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.element_type }}</td>
+                                        <td>{{ item.condition }}</td>
+                                        <td>{{ item.inspection_date }}</td> 
+                                        <td>{{ item.unit }}</td> 
+                                        <td>{{ item.story }}</td> 
+                                        <td>{{ item.apartmentblock }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'StructuralElement' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <!-- Utility Systems -->
+                            <table id="table-utilitysystems" class="data-table hidden">
+                                <thead>
+                                    <tr>
+                                        <th>ID:</th>
+                                        <th>System Type</th>
+                                        <th>Operational Status</th>
+                                        <th>Last Service Date</th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Location</th>
+                                        <th>Maintenance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.utilitysystems %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.system_type }}</td>
+                                        <td>{{ item.operational_status }}</td>
+                                        <td>{{ item.last_service_date }}</td> 
+                                        <td>{{ item.unit }}</td> 
+                                        <td>{{ item.story }}</td> 
+                                        <td>{{ item.apartmentblock }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'UtilitySystems' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <!-- Shared Amenities -->
+                            <table id="table-sharedamenities" class="data-table hidden">
+                                <thead>
+                                    <tr>
+                                        <th>ID:</th>
+                                        <th>Amenity Type</th>
+                                        <th>Usage Status</th>
+                                        <th>Last Cleaned Date</th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Location</th>
+                                        <th>Maintenance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.sharedamenities %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.amenity_type }}</td>
+                                        <td>{{ item.usage_status }}</td>
+                                        <td>{{ item.last_cleaned_date }}</td>
+                                        <td>{{ item.unit }}</td> 
+                                        <td>{{ item.story }}</td> 
+                                        <td>{{ item.apartmentblock }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'SharedAmenities' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <!-- Securities -->
+                            <table id="table-securities" class="data-table hidden">
+                                <thead>
+                                    <tr>
+                                        <th>ID:</th>
+                                        <th>Type</th>
+                                        <th>Installation Date</th>
+                                        <th>Condition</th>
+                                        <th>Notes</th>
+                                        <th>Coordinates</th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Location</th>
+                                        <th>Maintenance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.securities %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.type }}</td>
+                                        <td>{{ item.installation_date }}</td>
+                                        <td>{{ item.condition }}</td>
+                                        <td>{{ item.notes }}</td>
+                                        <td>{{ item.location }}</td>
+                                        <td>{{ item.unit }}</td> 
+                                        <td>{{ item.story }}</td> 
+                                        <td>{{ item.apartmentblock }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'Securities' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <a href="#" id="form2">Add Property Type</a>
+
+                            {% if message %}
+                                <div class="warning-message">
+                                    <span class="warning-icon">✅</span> 
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+
+                                <div id="add_properties" style="display: none;">
+                                    <form id="property" method="POST" action="{% url 'add_common_properties' 'placeholder' 'placeholder1' exec_id %}">
+                                        {% csrf_token %}
+                                        
+                                        <label for="selected_form">Please select form:</label>
+                                        <select name="selected_form" id="selected_form">
+                                            {% for form_name in forms %}
+                                                <option value="{{ form_name }}">{{ form_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <label for="selected_block">For Apartment Block:</label>
+                                        <select name="selected_block" id="selected_block">
+                                                <option value="{{ apartment_block }}">{{ apartment_block }}</option>
+                                        </select>
+                                        
+                                        <br>
+                                        <button type="submit" id="submit_button">Submit</button>
+                                    </form>
+                                </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="container my-10" style="max-width: 1000px; margin: auto;">
+                <div class="container">
+                    <h2 class="text-center mb-3">Property Maintenances</h2>
+                    
+                        <label for="category-dropdown">Select a Category To View Apartment {{ apartment_block.block_id }} Maintenances:</label>
+                        <select id="category-dropdown" onchange="showTableMaint(this.value)">
+                            <option value="">Select Maintenance Type</option>
+                            <option value="table-structuralmaint">Structural Elements</option>
+                            <option value="table-utilitymaint">Utility Systems</option>
+                            <option value="table-sharedamenitiesmaint">Shared Amenities</option>
+                            <option value="table-securitiesmaint">Securities</option>
+                            <option value="table-othermaint">Other</option>
+                        </select>
+
+                        <!-- Tables -->
+                        <div>
+                            
+                            <!-- Structural Elements -->
+                            <table id="table-structuralmaint" class="data-table1 hidden">
+                                <thead>
+                                    <tr>
+                                        <th>Property ID </th>
+                                        <th>Maintenance Date</th>
+                                        <th>Maintenance Cost </th>
+                                        <th>Property Image </th>
+                                        <th>On Ground Location </th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Next Maintenance Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.structuralmaint %}
+                                    <tr>    
+                                        <td>{{ item.property_id }}</td>
+                                        <td>{{ item.maintenance_date }}</td> 
+                                        <td>{{ item.maintenance_cost }}</td> 
+                                        <td>{{ item.property_image }}</td> 
+                                        <td>{{ item.on_ground_location }}</td>
+                                        <td>{{ item.unit }}</td>
+                                        <td>{{ item.story }}</td>
+                                        <td>{{ item.next_maintenance_date }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'StructuralElement' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                            <!-- Utility Systems -->
+                            <table id="table-utilitymaint" class="data-table1 hidden">
+                                <thead>
+                                    <tr>
+                                        <th>Property ID </th>
+                                        <th>Maintenance Date</th>
+                                        <th>Maintenance Cost </th>
+                                        <th>Property Image </th>
+                                        <th>On Ground Location </th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Next Maintenance Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.structuralmaint %}
+                                    <tr>    
+                                        <td>{{ item.property_id  }}</td>
+                                        <td>{{ item.maintenance_date  }}</td> 
+                                        <td>{{ item.maintenance_cost  }}</td> 
+                                        <td>{{ item.property_image  }}</td> 
+                                        <td>{{ item.on_ground_location  }}</td>
+                                        <td>{{ item.unit   }}</td>
+                                        <td>{{ item.story   }}</td>
+                                        <td>{{ item.next_maintenance_date   }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'UtilitySystems' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                             
+                            <!-- Shared Amenities -->
+                            <table id="table-sharedamenitiesmaint" class="data-table1 hidden">
+                                <thead>
+                                    <tr>
+                                        <th>Property ID </th>
+                                        <th>Maintenance Date</th>
+                                        <th>Maintenance Cost </th>
+                                        <th>Property Image </th>
+                                        <th>On Ground Location </th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Next Maintenance Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.structuralmaint %}
+                                    <tr>    
+                                        <td>{{ item.property_id  }}</td>
+                                        <td>{{ item.maintenance_date  }}</td> 
+                                        <td>{{ item.maintenance_cost  }}</td> 
+                                        <td>{{ item.property_image  }}</td> 
+                                        <td>{{ item.on_ground_location  }}</td>
+                                        <td>{{ item.unit   }}</td>
+                                        <td>{{ item.story   }}</td>
+                                        <td>{{ item.next_maintenance_date   }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'SharedAmenities' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <!-- Securities -->
+                            <table id="table-securitiesmaint" class="data-table1 hidden">
+                                <thead>
+                                    <tr>
+                                        <th>Property ID </th>
+                                        <th>Maintenance Date</th>
+                                        <th>Maintenance Cost </th>
+                                        <th>Property Image </th>
+                                        <th>On Ground Location </th>
+                                        <th>Unit</th>
+                                        <th>Story</th>
+                                        <th>Next Maintenance Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in context1.structuralmaint %}
+                                    <tr>    
+                                        <td>{{ item.property_id  }}</td>
+                                        <td>{{ item.maintenance_date  }}</td> 
+                                        <td>{{ item.maintenance_cost  }}</td> 
+                                        <td>{{ item.property_image  }}</td> 
+                                        <td>{{ item.on_ground_location  }}</td>
+                                        <td>{{ item.unit   }}</td>
+                                        <td>{{ item.story   }}</td>
+                                        <td>{{ item.next_maintenance_date   }}</td>
+                                        <td><a class="btn btn-success" href="{% url 'property_maintenance' 'Securities' item.id item.apartmentblock exec_id %}">Go To Maintenance</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <a href="#" id="form2">Add Property Type</a>
+
+                            {% if message %}
+                                <div class="warning-message">
+                                    <span class="warning-icon">✅</span> 
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+    document.getElementById('add_properties').addEventListener('submit', function (e) {
+    e.preventDefault(); 
+
+    const selectedForm = document.getElementById('selected_form').value;
+    const selectedBlock = document.getElementById('selected_block').value;
+    const formElement = document.getElementById('property');
+    
+    const url = "{% url 'add_common_properties' 'placeholder' 'placeholder1' exec_id %}".replace('placeholder', selectedForm).replace('placeholder1', selectedBlock);
+    formElement.action = url;
+
+    formElement.submit();
+});
+
+
+        document.getElementById('selected_form').addEventListener('change', function() {
+        const forms = document.querySelectorAll('.form_container');
+        forms.forEach(form => form.style.display = 'none');
+
+        const selectedForm = this.value;
+
+        if (selectedForm) {
+            const formToShow = document.getElementById(selectedForm);
+            formToShow.style.display = 'block';
+        }
+    });
+
+    document.getElementById('form2').addEventListener('click', function () {
+    document.getElementById('add_properties').style.display = 'block';
+}); 
+
+
+</script>
+        

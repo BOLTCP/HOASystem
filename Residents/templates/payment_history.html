@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Current Payment for Resident ID: {{ resident_id }}</h2>
+
+        {% if current_payment %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Recorded</th>
+                        <th>Water Bill:</th>
+                        <th>Electricity Bill (kWh)</th>
+                        <th>Monthly Payment</th>
+                        <th>Fees</th>
+                        <th>Payment Status</th>
+                        <th>Make Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>{{ current_payment.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ current_payment.water_bill }}</td>
+                            <td>{{ current_payment.electricity_bill }}</td>
+                            <td>{{ current_payment.monthly_payment }}</td>
+                            <td>{{ current_payment.fees }}</td>
+                            <td>{{ current_payment.payment_status }}</td>
+                            <td><a class="btn btn-success" href="{% url 'make_payment_monthly_usage' resident_id current_payment.id %}">Make Payment</a></td>
+                        </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <p>No usage history found for this resident.</p>
+        {% endif %}
+    </div>
+
+    <div class="container mt-5">
+        <h2>Payment History for Resident ID: {{ resident_id }}</h2>
+
+        {% if history %}
+            {% for record in history %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Recorded</th>
+                        <th>Water Bill:</th>
+                        <th>Electricity Bill (kWh)</th>
+                        <th>Monthly Payment</th>
+                        <th>Fees</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>{{ record.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ record.water_bill }}</td>
+                            <td>{{ record.electricity_bill }}</td>
+                            <td>{{ record.monthly_payment }}</td>
+                            <td>{{ record.fees }}</td>
+                            <td>{{ record.payment_status }}</td>
+                        </tr>
+                </tbody>
+            </table>
+            {% endfor %}
+        {% else %}
+            <p>No usage history found for this resident.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<form method="POST">
+  {% csrf_token %}
+  
+  <div class="form-group">
+      <label for="budget_month">Budget Month</label>
+      <input type="date" id="budget_month" name="budget_month" class="form-control">
+  </div>
+
+  <div class="form-group">
+      <label for="total_budget_amount">Total Budget Amount</label>
+      <input type="number" id="total_budget_amount" name="total_budget_amount" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+      <label for="staff_salaries_total">Staff Salaries Total</label>
+      <input type="number" id="staff_salaries_total" name="staff_salaries_total" value="{{ staff_salary_total }}" class="form-control" readonly>
+  </div>
+
+  <div class="form-group">
+    <label for="resident_utility_total">Resident Utility Total</label>
+    <input type="number" id="resident_utility_total" name="resident_utility_total" value="{{ resident_utility_total }}" class="form-control" readonly>
+    </div>
+
+  <div class="form-group">
+      <label for="common_property_expenses_total">Common Property Expenses Total</label>
+      <input type="number" id="common_property_expenses_total" name="common_property_expenses_total" class="form-control">
+  </div>
+
+  <div class="form-group">
+      <label for="additional_expenses">Additional Expenses</label>
+      <input type="number" id="additional_expenses" name="additional_expenses" class="form-control">
+  </div>
+
+  <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" class="form-control"></textarea>
+  </div>
+
+  <div class="form-group">
+      <label for="pretext">Pretext</label>  
+      <input type="text" id="pretext" name="pretext" class="form-control">
+  </div>
+
+  <div class="form-group">
+      <label for="apartment_block">Apartment Block</label>
+      <select id="apartment_block" name="apartment_block" class="form-control">
+          {% for apartment_block in apartment_blocks %}
+              <option value="{{ apartment_block }}">{{ apartment_block }}</option>
+          {% endfor %}
+      </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Create Budget</button>
+</form>

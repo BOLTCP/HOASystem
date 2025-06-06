@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Budget Parameter Interface</title>
+<style>
+    .parameter-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .parameter-label { width: 150px; }
+    .parameter-input { flex: 1; }
+    .remove-btn { color: red; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<h2>HOA Budget Parameters</h2>
+<form id="budgetForm">
+    <div id="parameterContainer">
+        <!-- Dynamic budget parameters will be added here -->
+    </div>
+    <button type="button" id="addParameterBtn">Add New Parameter</button>
+    <button type="button" id="addEntryBtn">Add Budget Entry</button>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    // Dynamic input management
+    let parameterCounter = 0; // Tracks the number of budget parameters
+    const parameterContainer = document.getElementById('parameterContainer');
+    const addParameterBtn = document.getElementById('addParameterBtn');
+    const addEntryBtn = document.getElementById('addEntryBtn');
+
+    // Function to create a new parameter input row
+    function createParameterRow() {
+        parameterCounter++;
+        
+        // Create a unique identifier for each parameter
+        const parameterId = `param_${parameterCounter}`;
+
+        // Create the parameter row container
+        const parameterRow = document.createElement('div');
+        parameterRow.className = 'parameter-row';
+        parameterRow.id = `parameterRow_${parameterId}`;
+
+        // Create the label input
+        const labelInput = document.createElement('input');
+        labelInput.type = 'text';
+        labelInput.placeholder = 'Parameter Name';
+        labelInput.className = 'parameter-label';
+        labelInput.name = `parameterName_${parameterId}`;
+        labelInput.required = true;
+
+        // Create the value input
+        const valueInput = document.createElement('input');
+        valueInput.type = 'number';
+        valueInput.placeholder = 'Parameter Value';
+        valueInput.className = 'parameter-input';
+        valueInput.name = `parameterValue_${parameterId}`;
+        valueInput.required = true;
+
+        // Create the remove button
+        const removeBtn = document.createElement('span');
+        removeBtn.textContent = 'Remove';
+        removeBtn.className = 'remove-btn';
+        removeBtn.onclick = () => parameterContainer.removeChild(parameterRow);
+
+        // Append inputs and button to the row
+        parameterRow.appendChild(labelInput);
+        parameterRow.appendChild(valueInput);
+        parameterRow.appendChild(removeBtn);
+
+        // Add the parameter row to the container
+        parameterContainer.appendChild(parameterRow);
+    }
+
+    // Event listener for adding new parameters
+    addParameterBtn.addEventListener('click', createParameterRow);
+
+    // Function to add budget entries (x n times)
+    function addBudgetEntry() {
+        const allRows = document.querySelectorAll('.parameter-row');
+        allRows.forEach(row => {
+            const clonedRow = row.cloneNode(true);
+            clonedRow.id = `cloned_${row.id}_${new Date().getTime()}`;
+            parameterContainer.appendChild(clonedRow);
+        });
+    }
+
+    // Event listener for adding entries
+    addEntryBtn.addEventListener('click', addBudgetEntry);
+
+    // Handle form submission
+    document.getElementById('budgetForm').onsubmit = function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const budgetData = {};
+
+        // Tokenize each parameter into an object
+        for (let [key, value] of formData.entries()) {
+            const [type, id] = key.split('_');
+            if (!budgetData[id]) budgetData[id] = {};
+            if (type === 'parameterName') budgetData[id].name = value;
+            if (type === 'parameterValue') budgetData[id].value = parseFloat(value);
+        }
+
+        console.log('Submitted Budget Data:', budgetData);
+        alert(JSON.stringify(budgetData, null, 2));
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<h2>{% if resident %}Edit Resident{% else %}Add New Resident{% endif %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}  {# Render your form fields here #}
+    
+    <button type="submit">{% if resident %}Update Resident{% else %}Add Resident{% endif %}</button>
+</form>
+
+{% if resident %}
+    <p>Current Resident Info:</p>
+    <p>Name: {{ resident.name }}</p>
+    <p>Phone: {{ resident.phone_number }}</p>
+    <a href="{% url 'edit_resident' %}">Edit</a>
+{% else %}
+    >Add Resident</a>
+{% endif %}
+{% endblock %}

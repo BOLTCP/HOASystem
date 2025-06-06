@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central Title with Buttons</title>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .title {
+        font-size: 3em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+    .button-container {
+        display: flex;
+        gap: 20px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 250px;
+        padding: 20px;
+        font-size: 1.5em;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-primary {
+        background-color: #4caf50; 
+    }
+
+    .btn-secondary {
+        background-color: #2196f3; 
+    }
+</style>
+</head>
+<body>
+
+<div class="title">HOA System</div>
+<h1>Admin Login</h1>
+
+<form method="POST">
+    {% csrf_token %} 
+    <div>
+        <label for="memberName">memberName</label>
+        <input type="text" name="memberName" id="memberName" value="{{ request.POST.memberName }}" required>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+    </div>
+    <button type="submit">Login</button>
+
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+</form>
+
+
+</body>
+</html>

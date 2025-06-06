@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Budget Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Make a Budget Request</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <label for="name">Title:</label>
+            <input type="text" id="name" name="name" placeholder="Title of Request" required><br>
+
+            <label for="request_type ">Paid On:</label>
+            <select name="request_type" id="request_type">
+                {% for request_type in request_types %}
+                <option value="{{request_type}}">{{request_type}}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="request_info">File:</label>
+            <input type="file" id="request_info" name="request_info" placeholder="File of Request" required><br>
+
+            <label for="pretext">Pretext:</label>
+            <select name="pretext" id="pretext">
+                {% for pretext in pretexts %}
+                <option value="{{pretext}}">{{pretext}}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="comment">Comment:</label>
+            <input type="text" id="comment" name="comment" placeholder="Comment of Request" required><br>
+            <label for="request_date">Comment:</label>
+            <input type="datetime-local" id="request_date" name="request_date" placeholder="Date of Request" required><br>
+            <button type="submit">Make Request</button>
+        </form>
+    </div>
+</body>
+</html>
